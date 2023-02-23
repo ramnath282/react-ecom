@@ -16,17 +16,18 @@ import { render } from '@testing-library/react';
 
 
 function App() {
-  const persistConfig = {
-    key: 'root',
-    storage,
-  }
-  const persistedReducer = persistReducer(persistConfig, rootReducer)
-  const store = createStore(persistedReducer);
-  const persistor = persistStore(store)
+  // const persistConfig = {
+  //   key: 'root',
+  //   storage,
+  // }
+  // const persistedReducer = persistReducer(persistConfig, rootReducer)
+  // const store = createStore(persistedReducer);
+  // const persistor = persistStore(store)
+  const store = createStore(rootReducer);
   return (
     <div className="App">
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
         <Router>
           <div>
           <Navbar />
@@ -37,7 +38,7 @@ function App() {
           </Switch>
           </div>
         </Router>
-        </PersistGate>
+        {/* </PersistGate> */}
       </Provider>
     </div>
   );

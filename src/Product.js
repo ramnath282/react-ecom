@@ -1,7 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import sessionStorage from "redux-persist/es/storage/session";
 import Item from "./Item";
+
 export default function Product() {
+  let initialData = {};
+  useEffect(() => {
+    fetchProductAPI("https://fakestoreapi.com/products");
+    fetchCategoryAPI("https://fakestoreapi.com/products/categories")
+  },[]);
+
+  const fetchProductAPI = (url) => {
+    fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+         
+         productSession('products',data,'set')
+        //localStorage.setItem("productdata", JSON.stringify(productdata))
+    })
+    .catch((error) => console.log(error));
+  }
+  const fetchCategoryAPI = (url) => {
+    fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      productSession('category',data,'set')
+        //localStorage.setItem("category", JSON.stringify(category))
+    })
+    .catch((error) => console.log(error));
+  }
+
+  const productSession = (objKeyName, val, type) => {
+    const sessionName = "productDatabse";
+    let sessionData = sessionStorage.getItem(sessionName);
+    if (typeof sessionData != "object" || !sessionData) {
+        sessionData = {};
+    }
+    if (type == "set") {
+      sessionData[objKeyName] = val;
+      sessionStorage.setItem(sessionName, JSON.stringify(sessionData));
+    }
+  }
+
   const productObj = useSelector((store) => store.ItemReducer);
   let [itemsObj, setCopyproductobj] = useState(productObj.products);
   const radionbtnselect = (ele) => {
@@ -11,6 +51,7 @@ export default function Product() {
     }) : productObj.products;
     setCopyproductobj(filteredObj);
   };
+
   return (
     <div className="container">
       <div className="row">
